@@ -2,7 +2,7 @@
 
 > 在你 18 歲以前，有幾項是你曾擁有的？勾選符合的項目，看看你的起跑線在哪裡。
 
-**Live Demo:** https://startline.kdchang.cc
+**Live Demo:** https://startline.kdchang.com
 
 ---
 
