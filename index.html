@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人生起跑線指數</title>
+    <link data-rh="true" rel="icon" href="/images/favicon.ico" />
+    <meta
+      name="description"
+      content="測量你在18歲以前享有的資源與機會，計算你的人生起跑線指數。"
+    />
+    <meta property="og:title" content="人生起跑線指數" />
+    <meta
+      property="og:description"
+      content="20道題，算出你的起跑線指數，看看你的成長資源有多少。"
+    />
+    <meta property="og:type" content="website" />
+    <style>
+      :root {
+        --bg: #0f0f13;
+        --surface: #1a1a24;
+        --surface2: #22222f;
+        --border: #2e2e42;
+        --accent: #7c6af5;
+        --accent2: #a78bfa;
+        --accent-glow: rgba(124, 106, 245, 0.18);
+        --text: #e8e8f0;
+        --text-muted: #8888a8;
+        --green: #4ade80;
+        --yellow: #fbbf24;
+        --orange: #fb923c;
+        --red: #f87171;
+        --pink: #f472b6;
+        --radius: 14px;
+        --radius-sm: 8px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC",
+          sans-serif;
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      /* ─── Header ─── */
+      header {
+        text-align: center;
+        padding: 64px 24px 40px;
+        background: radial-gradient(
+          ellipse 80% 50% at 50% -10%,
+          rgba(124, 106, 245, 0.22) 0%,
+          transparent 70%
+        );
+      }
+
+      .badge {
+        display: inline-block;
+        background: var(--accent-glow);
+        border: 1px solid rgba(124, 106, 245, 0.4);
+        color: var(--accent2);
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 99px;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: clamp(28px, 6vw, 52px);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        margin-bottom: 14px;
+        background: linear-gradient(135deg, #e8e8f0 30%, var(--accent2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: var(--text-muted);
+        max-width: 500px;
+        margin: 0 auto 32px;
+      }
+
+      /* ─── Sticky Score Bar ─── */
+      .score-bar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(15, 15, 19, 0.88);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .score-label {
+        font-size: 13px;
+        color: var(--text-muted);
+        white-space: nowrap;
+      }
+
+      .score-track {
+        flex: 1;
+        max-width: 360px;
+        height: 8px;
+        background: var(--surface2);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+
+      .score-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition:
+          width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          background 0.4s;
+        background: var(--accent);
+        width: 0%;
+      }
+
+      .score-number {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--accent2);
+        min-width: 48px;
+        text-align: center;
+      }
+
+      /* ─── Main ─── */
+      main {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+      }
+
+      /* ─── Category Sections ─── */
+      .category {
+        margin-bottom: 40px;
+      }
+
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .category-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      .cat-personal .category-icon {
+        background: rgba(124, 106, 245, 0.18);
+      }
+      .cat-family .category-icon {
+        background: rgba(251, 191, 36, 0.15);
+      }
+      .cat-global .category-icon {
+        background: rgba(74, 222, 128, 0.15);
+      }
+
+      .category-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: 0.02em;
+      }
+
+      .category-count {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-left: auto;
+      }
+
+      /* ─── Question Items ─── */
+      .questions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .question-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 14px 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          transform 0.1s;
+        user-select: none;
+      }
+
+      .question-item:hover {
+        background: var(--surface2);
+        border-color: rgba(124, 106, 245, 0.3);
+      }
+
+      .question-item.checked {
+        background: var(--accent-glow);
+        border-color: rgba(124, 106, 245, 0.5);
+      }
+
+      .question-item:active {
+        transform: scale(0.99);
+      }
+
+      .check-box {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        border: 2px solid var(--border);
+        background: var(--surface2);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+        margin-top: 1px;
+      }
+
+      .question-item.checked .check-box {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      .check-icon {
+        display: none;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .question-item.checked .check-icon {
+        display: block;
+      }
+
+      .question-num {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-muted);
+        margin-right: 2px;
+        flex-shrink: 0;
+        margin-top: 3px;
+      }
+
+      .question-text {
+        font-size: 14.5px;
+        color: var(--text);
+        flex: 1;
+      }
+
+      /* Hidden real checkbox */
+      input[type="checkbox"] {
+        display: none;
+      }
+
+      /* ─── CTA ─── */
+      .cta-wrapper {
+        text-align: center;
+        margin-top: 48px;
+      }
+
+      .btn-calc {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 16px 40px;
+        border-radius: 99px;
+        border: none;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s,
+          background 0.15s;
+        box-shadow: 0 0 32px rgba(124, 106, 245, 0.35);
+        letter-spacing: 0.02em;
+      }
+
+      .btn-calc:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 48px rgba(124, 106, 245, 0.5);
+        background: #8b7af8;
+      }
+
+      .btn-calc:active {
+        transform: scale(0.97);
+      }
+
+      /* ─── Result Overlay ─── */
+      #result-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(6px);
+        z-index: 200;
+        overflow-y: auto;
+        padding: 24px 16px;
+      }
+
+      #result-overlay.show {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+      }
+
+      .result-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 40px 32px;
+        max-width: 520px;
+        width: 100%;
+        margin: auto;
+        text-align: center;
+        position: relative;
+        animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.92) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      .result-close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+      }
+      .result-close:hover {
+        background: var(--border);
+      }
+
+      .result-emoji {
+        font-size: 64px;
+        margin-bottom: 12px;
+        display: block;
+      }
+
+      .result-tier {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+
+      .result-score {
+        font-size: 56px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+
+      .result-max {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin-bottom: 20px;
+      }
+
+      .result-bar-track {
+        height: 10px;
+        background: var(--surface2);
+        border-radius: 99px;
+        overflow: hidden;
+        margin-bottom: 24px;
+      }
+
+      .result-bar-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+        width: 0%;
+      }
+
+      .result-label {
+        font-size: 22px;
+        font-weight: 800;
+        margin-bottom: 10px;
+      }
+
+      .result-desc {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.75;
+        margin-bottom: 28px;
+      }
+
+      /* Percentile pill */
+      .result-percentile {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 99px;
+        padding: 6px 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 28px;
+      }
+
+      .result-percentile strong {
+        color: var(--text);
+      }
+
+      /* Breakdown */
+      .breakdown {
+        background: var(--surface2);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-bottom: 28px;
+        text-align: left;
+      }
+
+      .breakdown-title {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-bottom: 14px;
+      }
+
+      .breakdown-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .breakdown-row:last-child {
+        margin-bottom: 0;
+      }
+
+      .breakdown-name {
+        font-size: 13px;
+        color: var(--text-muted);
+        width: 90px;
+        flex-shrink: 0;
+      }
+
+      .breakdown-track {
+        flex: 1;
+        height: 6px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+
+      .breakdown-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+        width: 0%;
+      }
+
+      .breakdown-val {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text);
+        width: 30px;
+        text-align: right;
+      }
+
+      /* Share buttons */
+      .share-row {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .btn-share {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 99px;
+        border: 1px solid var(--border);
+        background: var(--surface2);
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+        text-decoration: none;
+      }
+
+      .btn-share:hover {
+        background: var(--border);
+        border-color: rgba(124, 106, 245, 0.4);
+      }
+
+      .btn-share.btn-copy.copied {
+        color: var(--green);
+        border-color: rgba(74, 222, 128, 0.4);
+      }
+
+      /* ─── Tier color vars ─── */
+      .tier-0 {
+        --tier-color: #8888a8;
+      }
+      .tier-1 {
+        --tier-color: var(--green);
+      }
+      .tier-2 {
+        --tier-color: var(--yellow);
+      }
+      .tier-3 {
+        --tier-color: var(--orange);
+      }
+      .tier-4 {
+        --tier-color: var(--red);
+      }
+      .tier-5 {
+        --tier-color: var(--pink);
+      }
+
+      .result-tier,
+      .result-score,
+      .result-label {
+        color: var(--tier-color);
+      }
+      .result-bar-fill,
+      .breakdown-fill {
+        background: var(--tier-color);
+      }
+
+      /* ─── Footer ─── */
+      footer {
+        text-align: center;
+        padding: 32px 24px;
+        color: var(--text-muted);
+        font-size: 12px;
+        border-top: 1px solid var(--border);
+        line-height: 1.8;
+      }
+
+      /* ─── Responsive ─── */
+      @media (max-width: 480px) {
+        header {
+          padding: 48px 20px 32px;
+        }
+        main {
+          padding: 28px 16px 64px;
+        }
+        .result-card {
+          padding: 32px 20px;
+        }
+        .result-score {
+          font-size: 44px;
+        }
+        .share-row {
+          flex-direction: column;
+          align-items: center;
+        }
+        .btn-share {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ─── Header ─── -->
+    <header>
+      <div class="badge">Life Starting Point Index</div>
+      <h1>人生起跑線指數</h1>
+      <p class="subtitle">
+        在你18歲以前，有幾項是你曾擁有的？<br />勾選符合的項目，看看你的起跑線在哪裡。
+      </p>
+    </header>
+
+    <!-- ─── Sticky Score ─── -->
+    <div class="score-bar">
+      <span class="score-label">目前分數</span>
+      <div class="score-track">
+        <div class="score-fill" id="score-fill"></div>
+      </div>
+      <span class="score-number" id="score-display">0 / 20</span>
+    </div>
+
+    <!-- ─── Questions ─── -->
+    <main>
+      <!-- Category 1: 個人資源 -->
+      <section class="category cat-personal">
+        <div class="category-header">
+          <div class="category-icon">🏠</div>
+          <div>
+            <div class="category-title">個人資源與教育</div>
+          </div>
+          <span class="category-count" id="count-personal">0 / 9</span>
+        </div>
+        <div class="questions" id="group-personal">
+          <label class="question-item" data-group="personal">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">01</span>
+            <span class="question-text">有自己的房間</span>
+          </label>
+          <label class="question-item" data-group="personal">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">02</span>
+            <span class="question-text">有自己的電腦</span>
+          </label>
+          <label class="question-item" data-group="personal">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">03</span>
+            <span class="question-text">接受過一對一家教</span>
+          </label>
+          <label class="question-item" data-group="personal">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">04</span>
+            <span class="question-text"
+              >參加過付費資優／競賽／外語檢定培訓班</span
+            >
+          </label>
+          <label class="question-item" data-group="personal">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">05</span>
+            <span class="question-text"
+              >付費學過樂器／舞蹈／美術任一項一年以上</span
+            >
+          </label>
+          <label class="question-item" data-group="personal">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">06</span>
+            <span class="question-text"
+              >付費學過網球／高爾夫／滑雪／潛水任一</span
+            >
+          </label>
+          <label class="question-item" data-group="personal">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">07</span>
+            <span class="question-text"
+              >接受過牙齒矯正／心理諮商任一（或負擔得起）</span
+            >
+          </label>
+          <label class="question-item" data-group="personal">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">08</span>
+            <span class="question-text"
+              >家中有當時熱門的遊戲主機（任天堂、PS、Xbox 系列）</span
+            >
+          </label>
+        </div>
+      </section>
+
+      <!-- Category 2: 家庭背景 -->
+      <section class="category cat-family">
+        <div class="category-header">
+          <div class="category-icon">👨‍👩‍👧</div>
+          <div>
+            <div class="category-title">家庭背景與資產</div>
+          </div>
+          <span class="category-count" id="count-family">0 / 6</span>
+        </div>
+        <div class="questions" id="group-family">
+          <label class="question-item" data-group="family">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">09</span>
+            <span class="question-text">家中長期雇用清潔人員／家務支援</span>
+          </label>
+          <label class="question-item" data-group="family">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">10</span>
+            <span class="question-text">家長都有大學畢業以上學歷</span>
+          </label>
+          <label class="question-item" data-group="family">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">11</span>
+            <span class="question-text">家裡有兩輛車以上</span>
+          </label>
+          <label class="question-item" data-group="family">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">12</span>
+            <span class="question-text">家裡在台北市有住宅</span>
+          </label>
+          <label class="question-item" data-group="family">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">13</span>
+            <span class="question-text"
+              >家長有為你配置信託／基金／股票／保單任一</span
+            >
+          </label>
+        </div>
+      </section>
+
+      <!-- Category 3: 國際視野 -->
+      <section class="category cat-global">
+        <div class="category-header">
+          <div class="category-icon">✈️</div>
+          <div>
+            <div class="category-title">國際視野與機會</div>
+          </div>
+          <span class="category-count" id="count-global">0 / 7</span>
+        </div>
+        <div class="questions" id="group-global">
+          <label class="question-item" data-group="global">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">14</span>
+            <span class="question-text">出國旅遊過</span>
+          </label>
+          <label class="question-item" data-group="global">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">15</span>
+            <span class="question-text">去過美國／加拿大／歐洲任一</span>
+          </label>
+          <label class="question-item" data-group="global">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">16</span>
+            <span class="question-text">搭過商務艙以上艙等</span>
+          </label>
+          <label class="question-item" data-group="global">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">17</span>
+            <span class="question-text">家裡有幫你規劃出國讀書</span>
+          </label>
+          <label class="question-item" data-group="global">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">18</span>
+            <span class="question-text">參加過海外夏令營／冬令營</span>
+          </label>
+          <label class="question-item" data-group="global">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">19</span>
+            <span class="question-text">讀過國際學校或雙語私校</span>
+          </label>
+          <label class="question-item" data-group="global">
+            <input type="checkbox" />
+            <div class="check-box"><span class="check-icon">✓</span></div>
+            <span class="question-num">20</span>
+            <span class="question-text"
+              >擁有雙重國籍／他國永久居留／長期居留權</span
+            >
+          </label>
+        </div>
+      </section>
+
+      <div class="cta-wrapper">
+        <button class="btn-calc" id="btn-calc" onclick="showResult()">
+          <span>查看我的結果</span>
+          <span>→</span>
+        </button>
+      </div>
+    </main>
+
+    <!-- ─── Result Overlay ─── -->
+    <div id="result-overlay">
+      <div class="result-card" id="result-card">
+        <button class="result-close" onclick="closeResult()">✕</button>
+
+        <span class="result-emoji" id="result-emoji"></span>
+        <div class="result-tier" id="result-tier"></div>
+        <div class="result-score" id="result-score"></div>
+        <div class="result-max">分（滿分 20 分）</div>
+        <div class="result-bar-track">
+          <div class="result-bar-fill" id="result-bar"></div>
+        </div>
+        <div class="result-label" id="result-label"></div>
+        <div class="result-desc" id="result-desc"></div>
+
+        <div class="result-percentile">
+          <span>📊 你的起跑線資源超過了約</span>
+          <strong id="result-percentile-val"></strong>
+          <span>的台灣成長背景</span>
+        </div>
+
+        <div class="breakdown">
+          <div class="breakdown-title">三大面向分解</div>
+          <div class="breakdown-row">
+            <span class="breakdown-name">🏠 個人資源</span>
+            <div class="breakdown-track">
+              <div
+                class="breakdown-fill"
+                id="bd-personal"
+                style="background: var(--accent)"
+              ></div>
+            </div>
+            <span class="breakdown-val" id="bd-personal-val"></span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-name">👨‍👩‍👧 家庭背景</span>
+            <div class="breakdown-track">
+              <div
+                class="breakdown-fill"
+                id="bd-family"
+                style="background: var(--yellow)"
+              ></div>
+            </div>
+            <span class="breakdown-val" id="bd-family-val"></span>
+          </div>
+          <div class="breakdown-row">
+            <span class="breakdown-name">✈️ 國際視野</span>
+            <div class="breakdown-track">
+              <div
+                class="breakdown-fill"
+                id="bd-global"
+                style="background: var(--green)"
+              ></div>
+            </div>
+            <span class="breakdown-val" id="bd-global-val"></span>
+          </div>
+        </div>
+
+        <div class="share-row">
+          <button
+            class="btn-share btn-copy"
+            id="btn-copy"
+            onclick="copyResult()"
+          >
+            <span>📋</span><span>複製結果</span>
+          </button>
+          <a
+            class="btn-share"
+            id="btn-twitter"
+            href="#"
+            target="_blank"
+            rel="noopener"
+          >
+            <span>𝕏</span><span>分享</span>
+          </a>
+          <button class="btn-share" onclick="resetQuiz()">
+            <span>🔄</span><span>重新測驗</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Life Starting Point Index · 人生起跑線指數 ·
+      僅供反思與討論使用，無意評判個人<br />
+      起跑線不同，但終點由你決定。資源的多寡不代表人品，也不決定你的未來。
+      <span
+        >Special thanks to
+        <a
+          target="_blank"
+          href="https://www.threads.com/@swe_roger/post/DS1kWzLE-7F/"
+          style="color: var(--accent)"
+          >swe_roger
+        </a>
+      </span>
+    </footer>
+
+    <script>
+      const MAX = 20;
+      const GROUP_MAX = { personal: 8, family: 5, global: 7 };
+
+      const TIERS = [
+        {
+          min: 0,
+          max: 3,
+          tier: "LEVEL 0",
+          emoji: "🌱",
+          label: "平民出身",
+          color: "tier-0",
+          desc: "你的成長環境相對樸實，缺乏許多常見的資源與機會。這樣的背景培養了你的韌性與自我驅動力。你走到現在的每一步，都是靠自己努力爭取的。",
+          percentile: "20%",
+        },
+        {
+          min: 4,
+          max: 7,
+          tier: "LEVEL 1",
+          emoji: "🏡",
+          label: "小康家庭",
+          color: "tier-1",
+          desc: "你享有基本的生活保障，家庭能提供部分學習資源。你的出發點比許多人好，但也深知資源不是無限的，懂得珍惜與努力。",
+          percentile: "40%",
+        },
+        {
+          min: 8,
+          max: 11,
+          tier: "LEVEL 2",
+          emoji: "🏙️",
+          label: "中產階級",
+          color: "tier-2",
+          desc: "你享有超過一般水準的資源：課外培訓、出遊機會、穩定的家庭背景。這些資本在許多情況下是無形的優勢，值得認識與感恩。",
+          percentile: "60%",
+        },
+        {
+          min: 12,
+          max: 14,
+          tier: "LEVEL 3",
+          emoji: "💼",
+          label: "優渥條件",
+          color: "tier-3",
+          desc: "你成長在擁有相當社會資本的家庭，無論是教育、視野還是財富規劃，都遠超平均水準。你的起跑線已比大多數人領先許多。",
+          percentile: "80%",
+        },
+        {
+          min: 15,
+          max: 17,
+          tier: "LEVEL 4",
+          emoji: "🌏",
+          label: "高度資源",
+          color: "tier-4",
+          desc: "你的成長背景屬於社會頂層，擁有豐富的國際視野、優質教育資源，以及家庭提供的強力後盾。這些優勢既是機會，也是責任。",
+          percentile: "90%",
+        },
+        {
+          min: 18,
+          max: 20,
+          tier: "LEVEL 5",
+          emoji: "👑",
+          label: "頂層資源",
+          color: "tier-5",
+          desc: "你擁有幾乎所有可想像的童年資源：頂尖教育、全球視野、財富規劃與多重身份優勢。你站在絕大多數人難以企及的起跑線上。",
+          percentile: "97%",
+        },
+      ];
+
+      // ─── State ───
+      let scores = { personal: 0, family: 0, global: 0 };
+
+      function getTotalScore() {
+        return scores.personal + scores.family + scores.global;
+      }
+
+      function updateScoreBar() {
+        const total = getTotalScore();
+        const pct = (total / MAX) * 100;
+        document.getElementById("score-fill").style.width = pct + "%";
+        document.getElementById("score-display").textContent =
+          total + " / " + MAX;
+
+        // Color shift
+        const fill = document.getElementById("score-fill");
+        if (pct < 30) fill.style.background = "#7c6af5";
+        else if (pct < 55) fill.style.background = "#fbbf24";
+        else if (pct < 75) fill.style.background = "#fb923c";
+        else fill.style.background = "#f472b6";
+      }
+
+      function updateGroupCount(group) {
+        const items = document.querySelectorAll(`[data-group="${group}"]`);
+        let count = 0;
+        items.forEach((el) => {
+          if (el.querySelector("input").checked) count++;
+        });
+        scores[group] = count;
+        document.getElementById("count-" + group).textContent =
+          count + " / " + GROUP_MAX[group];
+        updateScoreBar();
+      }
+
+      // ─── Attach listeners ───
+      document.querySelectorAll(".question-item").forEach((label) => {
+        const input = label.querySelector("input");
+        const group = label.dataset.group;
+
+        label.addEventListener("click", () => {
+          // toggle happens naturally via label→input
+          setTimeout(() => {
+            if (input.checked) label.classList.add("checked");
+            else label.classList.remove("checked");
+            updateGroupCount(group);
+          }, 0);
+        });
+      });
+
+      // ─── Result ───
+      function getTier(score) {
+        return TIERS.find((t) => score >= t.min && score <= t.max) || TIERS[0];
+      }
+
+      function showResult() {
+        const total = getTotalScore();
+        const tier = getTier(total);
+        const card = document.getElementById("result-card");
+
+        // Apply tier class
+        card.className = "result-card " + tier.color;
+
+        document.getElementById("result-emoji").textContent = tier.emoji;
+        document.getElementById("result-tier").textContent = tier.tier;
+        document.getElementById("result-score").textContent = total;
+        document.getElementById("result-label").textContent = tier.label;
+        document.getElementById("result-desc").textContent = tier.desc;
+        document.getElementById("result-percentile-val").textContent =
+          tier.percentile;
+
+        // Animate bar (reset first)
+        const bar = document.getElementById("result-bar");
+        bar.style.width = "0%";
+        setTimeout(() => {
+          bar.style.width = (total / MAX) * 100 + "%";
+        }, 50);
+
+        // Breakdown bars
+        const bdP = document.getElementById("bd-personal");
+        const bdF = document.getElementById("bd-family");
+        const bdG = document.getElementById("bd-global");
+        bdP.style.width = "0%";
+        bdF.style.width = "0%";
+        bdG.style.width = "0%";
+
+        document.getElementById("bd-personal-val").textContent =
+          scores.personal + "/" + GROUP_MAX.personal;
+        document.getElementById("bd-family-val").textContent =
+          scores.family + "/" + GROUP_MAX.family;
+        document.getElementById("bd-global-val").textContent =
+          scores.global + "/" + GROUP_MAX.global;
+
+        setTimeout(() => {
+          bdP.style.width = (scores.personal / GROUP_MAX.personal) * 100 + "%";
+          bdF.style.width = (scores.family / GROUP_MAX.family) * 100 + "%";
+          bdG.style.width = (scores.global / GROUP_MAX.global) * 100 + "%";
+        }, 100);
+
+        // Twitter/X share
+        const shareText = `我的人生起跑線指數：${total}/20（${tier.label}）\n${tier.emoji} ${tier.desc.slice(0, 40)}…\n#人生起跑線指數 #LifeStartingPointIndex`;
+        document.getElementById("btn-twitter").href =
+          "https://twitter.com/intent/tweet?text=" +
+          encodeURIComponent(shareText);
+
+        document.getElementById("result-overlay").classList.add("show");
+      }
+
+      function closeResult() {
+        document.getElementById("result-overlay").classList.remove("show");
+      }
+
+      function copyResult() {
+        const total = getTotalScore();
+        const tier = getTier(total);
+        const text = `Life Starting Point Index｜人生起跑線指數\n分數：${total}/20（${tier.label} ${tier.emoji}）\n個人資源：${scores.personal}/${GROUP_MAX.personal}，家庭背景：${scores.family}/${GROUP_MAX.family}，國際視野：${scores.global}/${GROUP_MAX.global}\n#人生起跑線指數 #LifeStartingPointIndex`;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.getElementById("btn-copy");
+          btn.classList.add("copied");
+          btn.querySelector("span:last-child").textContent = "已複製！";
+          setTimeout(() => {
+            btn.classList.remove("copied");
+            btn.querySelector("span:last-child").textContent = "複製結果";
+          }, 2000);
+        });
+      }
+
+      function resetQuiz() {
+        document.querySelectorAll(".question-item").forEach((label) => {
+          label.querySelector("input").checked = false;
+          label.classList.remove("checked");
+        });
+        scores = { personal: 0, family: 0, global: 0 };
+        ["personal", "family", "global"].forEach((g) => {
+          document.getElementById("count-" + g).textContent =
+            "0 / " + GROUP_MAX[g];
+        });
+        updateScoreBar();
+        closeResult();
+      }
+
+      // Close overlay on backdrop click
+      document
+        .getElementById("result-overlay")
+        .addEventListener("click", (e) => {
+          if (e.target === document.getElementById("result-overlay"))
+            closeResult();
+        });
+    </script>
+  </body>
+</html>
