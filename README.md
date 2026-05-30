@@ -38,6 +38,10 @@ git clone git@github.com:kdchang-labs/startline.git
 cd startline
 
 # 啟動本地開發伺服器
+npx serve .
+
+or
+
 python3 -m http.server 8080
 ```
 

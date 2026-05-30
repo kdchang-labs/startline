@@ -886,12 +886,12 @@
           </button>
           <a
             class="btn-share"
-            id="btn-twitter"
+            id="btn-facebook"
             href="#"
             target="_blank"
             rel="noopener"
           >
-            <span>𝕏</span><span>分享</span>
+            <span>📘</span><span>分享到 Facebook</span>
           </a>
           <button class="btn-share" onclick="resetQuiz()">
             <span>🔄</span><span>重新測驗</span>
@@ -1080,10 +1080,13 @@
           bdG.style.width = (scores.global / GROUP_MAX.global) * 100 + "%";
         }, 100);
 
-        // Twitter/X share
+        // Facebook share
         const shareText = `我的人生起跑線指數：${total}/20（${tier.label}）\n${tier.emoji} ${tier.desc.slice(0, 40)}…\n#人生起跑線指數 #LifeStartingPointIndex`;
-        document.getElementById("btn-twitter").href =
-          "https://twitter.com/intent/tweet?text=" +
+        const shareUrl = encodeURIComponent(window.location.href);
+        document.getElementById("btn-facebook").href =
+          "https://www.facebook.com/sharer/sharer.php?u=" +
+          shareUrl +
+          "&quote=" +
           encodeURIComponent(shareText);
 
         document.getElementById("result-overlay").classList.add("show");
