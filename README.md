@@ -1,81 +1,81 @@
-# 人生起跑線指數 · Life Starting Point Index
+# Life Starting Point Index
 
-> 在你 18 歲以前，有幾項是你曾擁有的？勾選符合的項目，看看你的起跑線在哪裡。
+> How many of these did you have before you turned 18? Check the ones that apply and see where your starting line was.
 
 **Live Demo:** https://startline.kdchang.com
 
 ---
 
-## 專案介紹
+## About
 
-「人生起跑線指數」是一個輕量互動式測驗，透過 20 道題目衡量你在成長過程中所擁有的資源與機會。題目涵蓋三大面向：
+The Life Starting Point Index is a lightweight interactive quiz that measures the resources and opportunities you had growing up, across 20 questions in three categories:
 
-| 面向 | 題數 | 說明 |
-|------|------|------|
-| 個人資源與教育 | 8 題 | 私人空間、設備、課外培訓、才藝等 |
-| 家庭背景與資產 | 5 題 | 家庭學歷、財富規劃、居住地等 |
-| 國際視野與機會 | 7 題 | 出國旅遊、海外教育、雙重國籍等 |
+| Category | Questions | Description |
+|----------|-----------|-------------|
+| Personal Resources & Education | 8 | Private space, devices, extracurricular training, talents, etc. |
+| Family Background & Assets | 5 | Family education level, financial planning, location, etc. |
+| Global Exposure & Opportunities | 7 | Overseas travel, international education, dual citizenship, etc. |
 
-完成後會根據分數給出 Level 0–5 的評級，並顯示各面向的細項分數。
-
----
-
-## 功能特色
-
-- 即時累分：Sticky Score Bar 隨勾選即時更新
-- 結果彈窗：動畫呈現分數、等級、三面向分解圖
-- 分享功能：一鍵複製結果文字 / 分享至 X (Twitter)
-- 無框架依賴：純 HTML + CSS + Vanilla JS，零依賴
-- RWD：支援手機與桌機
+After completing the quiz, you'll receive a Level 0–5 rating along with a breakdown score for each category.
 
 ---
 
-## 快速開始
+## Features
+
+- Live scoring: Sticky Score Bar updates in real time as you check items
+- Result modal: Animated display of score, level, and three-category breakdown
+- Share: One-click copy result text / share to X (Twitter)
+- Zero dependencies: Pure HTML + CSS + Vanilla JS
+- Responsive: Works on both mobile and desktop
+
+---
+
+## Getting Started
 
 ```bash
-# clone 專案
+# Clone the repo
 git clone git@github.com:kdchang-labs/startline.git
 cd startline
 
-# 啟動本地開發伺服器
+# Start a local dev server
 npx serve .
 
-or
+# or
 
 python3 -m http.server 8080
 ```
 
-開啟瀏覽器前往 `http://localhost:8080`
+Open your browser at `http://localhost:8080`
 
 ---
 
-## 專案結構
+## Project Structure
 
 ```
-├── index.html        # 主頁面（含所有 CSS / JS）
+├── index.html        # Main page (all CSS / JS included)
 ├── images/
 │   └── favicon.ico
-└── CNAME             # GitHub Pages 自訂網域
+└── CNAME             # GitHub Pages custom domain
 ```
 
 ---
 
-## 評級對照表
+## Level Reference
 
-| 分數 | 等級 | 標籤 |
-|------|------|------|
-| 0–3 | LEVEL 0 🌱 | 平民出身 |
-| 4–7 | LEVEL 1 🏡 | 小康家庭 |
-| 8–11 | LEVEL 2 🏙️ | 中產階級 |
-| 12–14 | LEVEL 3 💼 | 優渥條件 |
-| 15–17 | LEVEL 4 🌏 | 高度資源 |
-| 18–20 | LEVEL 5 👑 | 頂層資源 |
+| Score | Level | Label |
+|-------|-------|-------|
+| 0–3 | LEVEL 0 🌱 | Humble Origins |
+| 4–7 | LEVEL 1 🏡 | Working Class |
+| 8–11 | LEVEL 2 🏙️ | Middle Class |
+| 12–14 | LEVEL 3 💼 | Well-off |
+| 15–17 | LEVEL 4 🌏 | High Resources |
+| 18–20 | LEVEL 5 👑 | Top Tier |
 
 ---
 
-## 致謝
+## Credits
 
-靈感來源：[@swe_roger on Threads](https://www.threads.com/@swe_roger/post/DS1kWzLE-7F/)
+Inspired by: [台灣特權指數 @swe_roger on Threads](https://www.threads.com/@swe_roger/post/DS1kWzLE-7F/)
 
 ---
 
