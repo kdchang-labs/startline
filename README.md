@@ -2,7 +2,7 @@
 
 > How many of these did you have before you turned 18? Check the ones that apply and see where your starting line was.
 
-**Live Demo:** https://startline.kdchang.com
+**Live Demo:** https://labs.kdchang.com/startline
 
 ---
 
